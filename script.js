@@ -4,7 +4,7 @@ var losses = 0;
 var total = wins + losses;
 var gameOver = false;
 
-var words = ["alladin", "peter pan", "frozen", "lilo and stitch", "the Lion King", "bambi", "cinderella", "the little mermaid", "robin hood", "pocahontas", "moana", "beauty and the beast", "mulan", "nightmare before christmas", "snow white", "the jungle book", "sleeping beauty", "alice in wonderland", "pinocchio", "dumbo"];             //must be all lowercase
+var words = ["alladin", "peter pan", "frozen", "lilo and stitch", "the lion king", "bambi", "cinderella", "the little mermaid", "robin hood", "pocahontas", "moana", "beauty and the beast", "mulan", "nightmare before christmas", "snow white", "the jungle book", "sleeping beauty", "alice in wonderland", "pinocchio", "dumbo"];             //must be all lowercase
 var counter = 0;
 var currentWord = words[counter];
 
