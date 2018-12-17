@@ -5,7 +5,7 @@ var loseSound = new Audio("./assets/sounds/lose.mp3");
 
 var guessSound = new Audio("./assets/sounds/guess.mp3");
 
-var backgroundMusic = new Audio("./assets/sounds/backgroundMusic.mp3");
+var backgroundMusic = new Audio("./assets/sounds/try2.mp3");
 /**********HELP - CANT GET THIS TO PLAY ************/
 backgroundMusic.loop = true;
 
@@ -34,8 +34,15 @@ document.getElementById('guesses').innerHTML = guesses;             //write gues
 
 resetDisplay();                                                     //write display to start    
 
-
+startGame();
 //load sounds//
+function startGame() {
+    
+    alert("Start guessing letters!");
+    
+}
+
+
 
 
 /////////////*********************Write Display**********************///////////////////// */
@@ -60,6 +67,7 @@ function resetDisplay() {
 ////*********************************************************************************************////////
 function guess() {
     input = event.key;
+    backgroundMusic.play();
     if (gameOver) {
         alert('The game is over.  Refresh the page to play again');
         return 0;
@@ -93,6 +101,7 @@ function guess() {
     }
     lettersGuessed.push(input);
     //decrease guesses
+    
     guessSound.play();
     //print everything back out to screen
     document.getElementById('guesses').innerHTML = guesses;
@@ -123,6 +132,7 @@ function guess() {
         //display the word as _'s
         resetDisplay();
     } else if (underscores == false) {
+        winSound.play();
         alert("You got that one!  It was " + currentWord.toUpperCase() + "!");
         wins = wins + 1;
         //update total
@@ -142,5 +152,6 @@ function guess() {
         //display the word as _'s
         resetDisplay();
     }
+    
 }
 
