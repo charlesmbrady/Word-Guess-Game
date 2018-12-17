@@ -76,7 +76,7 @@ function guess() {
    
     //print everything back out to screen
     document.getElementById('guesses').innerHTML = guesses;
-    document.getElementById('letters').innerHTML = lettersGuessed;
+    document.getElementById('letters').innerHTML = lettersGuessed.join("  ").toUpperCase();
     document.getElementById('display').innerHTML = display.join(" ");
 
 
