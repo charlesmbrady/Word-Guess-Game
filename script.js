@@ -1,11 +1,10 @@
-
 var guesses = 10;
 var wins = 0;
 var losses = 0;
 var total = wins + losses;
 var gameOver = false;
 
-var words = ["fleetwood mac", "cat", "mouse", "moose"];             //must be all lowercase
+var words = ["alladin", "peter pan", "frozen", "lilo and stitch", "the Lion King", "bambi", "cinderella", "the little mermaid", "robin hood", "pocahontas", "moana", "beauty and the beast", "mulan", "nightmare before christmas", "snow white", "the jungle book", "sleeping beauty", "alice in wonderland", "pinocchio", "dumbo"];             //must be all lowercase
 var counter = 0;
 var currentWord = words[counter];
 
@@ -13,24 +12,31 @@ var display = [];
 var input;
 var currentWordLength = currentWord.length;
 var lettersGuessed = [];
-document.addEventListener("keydown", guess);
+
+document.addEventListener("keydown", guess);                        //listen for keypress
 
 document.getElementById('guesses').innerHTML = guesses;             //write guesses to document to start
 
-//display the word as _'s
-for (var i = 0; i < currentWordLength; i++) {
-    if (currentWord[i] == ' ') {
-        display.push("&nbsp;");
-    } else {
-        display.push("_");
-    }
+resetDisplay();                                                     //write display to start    
+
+/////////////*********************Write Display**********************///////////////////// */
+function resetDisplay() {
+    guesses = 10;
+        document.getElementById('guesses').innerHTML = guesses;
+        display = [];
+        lettersGuessed = [];
+        document.getElementById('letters').innerHTML = lettersGuessed;
+        for (var i = 0; i < currentWordLength; i++) {
+            if (currentWord[i] == ' ') {
+                display.push("&nbsp;");
+            } else {
+                display.push("_");
+            }
+        }
+        document.getElementById("display").innerHTML = display.join(" ");
+        //display the word as _'s
 }
-document.getElementById("display").innerHTML = display.join(" ");
-//display the word as _'s
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////
 ////*********************************************************************************************////////
 function guess() {
     input = event.key;
@@ -62,10 +68,12 @@ function guess() {
                 display[i] = input;
             }
         }
+    }else{
+        guesses = guesses - 1;
     }
     lettersGuessed.push(input);
     //decrease guesses
-    guesses = guesses - 1;
+   
     //print everything back out to screen
     document.getElementById('guesses').innerHTML = guesses;
     document.getElementById('letters').innerHTML = lettersGuessed;
@@ -75,7 +83,7 @@ function guess() {
     //check to see if there are underscores and guesses left
     var underscores = display.join("").includes("_");
     if (underscores == true && guesses == 0) {
-        alert("You didn't get that one.");
+        alert("You didn't get that one. It was " + currentWord.toUpperCase() + ".");
         losses = losses + 1;
         //update total
         total = wins + losses;
@@ -91,22 +99,9 @@ function guess() {
 
         //rewrite display and lettersGuessed arrays and guesses to 10**************************************************
         //display the word as _'s
-        guesses = 10;
-        document.getElementById('guesses').innerHTML = guesses;
-        display = [];
-        lettersGuessed = [];
-        document.getElementById('letters').innerHTML = lettersGuessed;
-        for (var i = 0; i < currentWordLength; i++) {
-            if (currentWord[i] == ' ') {
-                display.push("&nbsp;");
-            } else {
-                display.push("_");
-            }
-        }
-        document.getElementById("display").innerHTML = display.join(" ");
-        //display the word as _'s
+        resetDisplay();
     } else if (underscores == false) {
-        alert("You got that one!");
+        alert("You got that one!  It was " + currentWord.toUpperCase() + "!");
         wins = wins + 1;
         //update total
         total = wins + losses;
@@ -123,20 +118,7 @@ function guess() {
 
         //rewrite display and lettersGuessed arrays and guesses to 10**************************************************
         //display the word as _'s
-        guesses = 10;
-        document.getElementById('guesses').innerHTML = guesses;
-        display = [];
-        lettersGuessed = [];
-        document.getElementById('letters').innerHTML = lettersGuessed;
-        for (var i = 0; i < currentWordLength; i++) {
-            if (currentWord[i] == ' ') {
-                display.push("&nbsp;");
-            } else {
-                display.push("_");
-            }
-        }
-        document.getElementById("display").innerHTML = display.join(" ");
-        //display the word as _'s
+        resetDisplay();
     }
 }
 

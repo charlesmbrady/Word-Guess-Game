@@ -1,22 +1,33 @@
+*{
+    color: white;
+}
+
 .row{
     text-align: center;
 }
 
 .title{
-    background: seashell;
-    border-bottom: 3px solid red;
+    border-bottom: 3px solid white;
+    font-family: 'Charm', cursive;
+    font-size: 100px;
 
 }
 
-.wins{
+.wins, .current-word, .guesses, .letters{
+    font-size: 40px;
+
+}
+
+
+img {
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    margin: auto;
     
-
 }
 
-.current-word{
-
-}
-
-.guesses{
+#wins, #display, #guesses, #letters{
+    font-size: 40px;
 
 }
