@@ -36,10 +36,13 @@ img {
     background: blue;
     border-radius: 5px;
     padding: 10px;
+  
 }
 
 #letters{
     background: blue;
     padding: 10px;
     border-radius: 10px;
+    opacity: .9;
 }
+

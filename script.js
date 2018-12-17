@@ -1,3 +1,18 @@
+//sounds//
+var winSound = new Audio("./assets/sounds/success.mp3");
+
+var loseSound = new Audio("./assets/sounds/lose.mp3");
+
+var guessSound = new Audio("./assets/sounds/guess.mp3");
+
+var backgroundMusic = new Audio("./assets/sounds/backgroundMusic.mp3");
+/**********HELP - CANT GET THIS TO PLAY ************/
+backgroundMusic.loop = true;
+
+
+
+/****sounds****/
+
 var guesses = 10;
 var wins = 0;
 var losses = 0;
@@ -19,8 +34,13 @@ document.getElementById('guesses').innerHTML = guesses;             //write gues
 
 resetDisplay();                                                     //write display to start    
 
+
+//load sounds//
+
+
 /////////////*********************Write Display**********************///////////////////// */
 function resetDisplay() {
+    
     guesses = 10;
         document.getElementById('guesses').innerHTML = guesses;
         display = [];
@@ -50,7 +70,7 @@ function guess() {
         alert("guess a lowercase letter");
         return 0;
     }///////////////////////////////////////////////////////////////////////////
-
+    
     //guessed already? ----> end***********************************************
     for (var i = 0; i < lettersGuessed.length; i++) {
         if (input == lettersGuessed[i]) {
@@ -58,7 +78,7 @@ function guess() {
             return 0;
         }
     }//************************************************************************
-
+    
     //Does the letter exist in the word?
     var exists = false;
     if (currentWord.includes(input)) {
@@ -73,7 +93,7 @@ function guess() {
     }
     lettersGuessed.push(input);
     //decrease guesses
-   
+    guessSound.play();
     //print everything back out to screen
     document.getElementById('guesses').innerHTML = guesses;
     document.getElementById('letters').innerHTML = lettersGuessed.join("  ").toUpperCase();
@@ -83,8 +103,10 @@ function guess() {
     //check to see if there are underscores and guesses left
     var underscores = display.join("").includes("_");
     if (underscores == true && guesses == 0) {
+        loseSound.play();
         alert("You didn't get that one. It was " + currentWord.toUpperCase() + ".");
         losses = losses + 1;
+        
         //update total
         total = wins + losses;
         //rewrite losses*************************************************???????????????***** need to put an element on page for losses
