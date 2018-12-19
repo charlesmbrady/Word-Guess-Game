@@ -1,157 +1,134 @@
-//sounds//
-var winSound = new Audio("./assets/sounds/success.mp3");
+$(document).ready(function () {
+    /*********************************sounds*******************************/
+    var winSound = new Audio("./assets/sounds/success.mp3");                             //add srcs for audio 
+    var loseSound = new Audio("./assets/sounds/lose.mp3");
+    var guessSound = new Audio("./assets/sounds/guess.mp3");
 
-var loseSound = new Audio("./assets/sounds/lose.mp3");
+    var backgroundMusic = new Audio("./assets/sounds/try2.mp3");
+    backgroundMusic.loop = true;
+    //backgroundMusic.play();                               //add background music to work
+    ///////////////////////////////////////////////////////////////////////
 
-var guessSound = new Audio("./assets/sounds/guess.mp3");
+    /*******Variables*******/
+    var win = 0;
+    var loss = 0;
+    var total = win + loss;
+    var gameOver = false;
 
-var backgroundMusic = new Audio("./assets/sounds/try2.mp3");
-/**********HELP - CANT GET THIS TO PLAY ************/
-backgroundMusic.loop = true;
+    var words = ["alladin", "peter pan", "frozen", "lilo and stitch", "the lion king", "bambi", "cinderella", "the little mermaid", "robin hood", "pocahontas", "moana", "beauty and the beast", "mulan", "nightmare before christmas", "snow white", "the jungle book", "sleeping beauty", "alice in wonderland", "pinocchio", "dumbo"]; //must be lowercase
+    var counter = 0;
 
+    //////////////////////////
+    /********Game Object*******/
+    var game = {
+        guesses: 10,
+        word: words[counter],
+        display: [],
+        letters: []
+    }
+    //////////////////////////
 
-
-/****sounds****/
-
-var guesses = 10;
-var wins = 0;
-var losses = 0;
-var total = wins + losses;
-var gameOver = false;
-
-var words = ["alladin", "peter pan", "frozen", "lilo and stitch", "the lion king", "bambi", "cinderella", "the little mermaid", "robin hood", "pocahontas", "moana", "beauty and the beast", "mulan", "nightmare before christmas", "snow white", "the jungle book", "sleeping beauty", "alice in wonderland", "pinocchio", "dumbo"];             //must be all lowercase
-var counter = 0;
-var currentWord = words[counter];
-
-var display = [];
-var input;
-var currentWordLength = currentWord.length;
-var lettersGuessed = [];
-
-document.addEventListener("keydown", guess);                        //listen for keypress
-
-document.getElementById('guesses').innerHTML = guesses;             //write guesses to document to start
-
-resetDisplay();                                                     //write display to start    
-
-startGame();
-//load sounds//
-function startGame() {
-    
-    alert("Start guessing letters!");
-    
-}
+/*****************************************************************************************/
+$(document).on("keydown", guess);           //Event listener
 
 
+newGame();
 
 
-/////////////*********************Write Display**********************///////////////////// */
-function resetDisplay() {
-    
-    guesses = 10;
-        document.getElementById('guesses').innerHTML = guesses;
-        display = [];
-        lettersGuessed = [];
-        document.getElementById('letters').innerHTML = lettersGuessed;
-        for (var i = 0; i < currentWordLength; i++) {
-            if (currentWord[i] == ' ') {
-                display.push("&nbsp;");
-            } else {
-                display.push("_");
-            }
-        }
-        document.getElementById("display").innerHTML = display.join(" ");
-        //display the word as _'s
-}
-/////////////////////////////////////////////////////////////////////////////////////////////
-////*********************************************************************************************////////
-function guess() {
-    input = event.key;
-    backgroundMusic.play();
-    if (gameOver) {
-        alert('The game is over.  Refresh the page to play again');
+/////////////////////////////////////////
+function guess(){
+   backgroundMusic.play();
+    var input = event.key;
+    //input = input.toLowerCase();    //accept capital letters - wasn't working was still accepting capslock and tab etc.
+
+/******************* exceptions  *************************************************/
+    //check to make sure lowercase input is letter.  If not, return 0
+    if((input < 'a') || (input > 'z')){
+        alert("Guess a lowercase letter");
         return 0;
     }
 
-    //keystroke not a letter? or not lowercase? ----> end///////////////////////
-    if (input < 'a' || 'z' < input) {
-        alert("guess a lowercase letter");
+    //check to make sure input hasn't been guessed before.  If so, return 0
+    if(game.letters.includes(input)){
+        alert("Already guessed that letter");
         return 0;
-    }///////////////////////////////////////////////////////////////////////////
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////
     
-    //guessed already? ----> end***********************************************
-    for (var i = 0; i < lettersGuessed.length; i++) {
-        if (input == lettersGuessed[i]) {
-            alert("You already guessed that letter!");
-            return 0;
-        }
-    }//************************************************************************
-    
-    //Does the letter exist in the word?
-    var exists = false;
-    if (currentWord.includes(input)) {
-        /////if it's included, a bunch of stuff happens here.  if it is included, we need to know where so let's loop through currentWord, comparing each letter to input, and if we find it equals, assign input to display[i]
-        for (var i = 0; i < currentWord.length; i++) {
-            if (input == currentWord[i]) {
-                display[i] = input;
+   guessSound.play();
+    //if those pass, loop through word checking if that letter is there, if not, decrease guesses.  Update display 
+    if(game.word.includes(input)){
+        for(var i = 0; i < game.word.length; i++){
+            if(input == game.word[i]){
+                game.display[i] = game.word[i];
             }
         }
     }else{
-        guesses = guesses - 1;
+        game.guesses--;
     }
-    lettersGuessed.push(input);
-    //decrease guesses
-    
-    guessSound.play();
-    //print everything back out to screen
-    document.getElementById('guesses').innerHTML = guesses;
-    document.getElementById('letters').innerHTML = lettersGuessed.join("  ").toUpperCase();
-    document.getElementById('display').innerHTML = display.join(" ");
+    game.letters.push(input);
+    updateGame();
+    checkGame();
+    /*********************************************************************************/
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    //check to see if there are underscores and guesses left
-    var underscores = display.join("").includes("_");
-    if (underscores == true && guesses == 0) {
-        loseSound.play();
-        alert("You didn't get that one. It was " + currentWord.toUpperCase() + ".");
-        losses = losses + 1;
-        
-        //update total
-        total = wins + losses;
-        //rewrite losses*************************************************???????????????***** need to put an element on page for losses
-        if (total == words.length) {
-            alert("The game is over.  Refresh the page to play again.");
-            gameOver = true;
+function checkGame(){
+    if(game.display.includes("_")){
+        if(game.guesses > 0){
             return 0;
+            
+        }else{
+            loss++;
+            loseSound.play();
+            alert("You didn't get that one, it was " + game.word);
+            newGame();
         }
-        counter = counter + 1;
-        currentWord = words[counter];
-        currentWordLength = currentWord.length;
-
-        //rewrite display and lettersGuessed arrays and guesses to 10**************************************************
-        //display the word as _'s
-        resetDisplay();
-    } else if (underscores == false) {
+    }else{
+        win++;
         winSound.play();
-        alert("You got that one!  It was " + currentWord.toUpperCase() + "!");
-        wins = wins + 1;
-        //update total
-        total = wins + losses;
-        //rewrite wins
-        document.getElementById('wins').innerHTML = wins;
-        if (total == words.length) {
-            alert("The game is over.  Refresh the page to play again.");
-            gameOver = true;
-            return 0;
-        }
-        counter = counter + 1;
-        currentWord = words[counter];
-        currentWordLength = currentWord.length;
-
-        //rewrite display and lettersGuessed arrays and guesses to 10**************************************************
-        //display the word as _'s
-        resetDisplay();
+        alert("You got that one! It was " + game.word);
+        newGame();
     }
-    
 }
 
+function updateGame(){
+    $("#display").html(game.display.join(" "));
+    $("#letters").html(game.letters.join(" ").toUpperCase());
+    $("#guesses").html(game.guesses);
+    $("#wins").html(win);
+    $("#losses").html(loss);
+}
+
+function newGame() {
+    counter++;
+    total = win + loss;
+    game.word = words[counter];
+    game.display = [];
+    /*************** Make initial display array ******************/
+        for (var i = 0; i < game.word.length; i++) {
+            if (game.word[i] == " ") {
+                game.display.push("&nbsp;");
+            } else {
+                game.display.push("_");
+            }
+        }
+    ////////////////////////////////////////////////////////////////
+        $("#display").html(game.display.join(" "));     //write display array to html as string
+
+        $("#wins").text(win);                       //write wins to html
+        $("#losses").text(loss);                  //write losses to html
+
+        game.guesses = 10;                           //reset guesses
+        $("#guesses").text(game.guesses);            //write guesses to html
+
+        game.letters = [];                           //reset letters
+        $("#letters").text(game.letters);            //write letters to html
+        
+        if(total == words.length){
+            alert("game is over");
+            gameOver = true;
+        }
+}
+
+}); //end javascript
